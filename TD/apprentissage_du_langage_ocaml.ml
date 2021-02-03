@@ -3,11 +3,12 @@ Exercice 1
   Indiquer le type des expressions suivantes et le résultat du calcul
 *)
 11 - 4 + 25 ;; (*int - 32*)
-12.0 +. 7.1 ;; (*float - 17.1*)
+12.0 +. 7.1 ;; (*float - 19.1*)
 let a = false in a || (3>0) ;; (*boolean - true*)
+let a = true and b = false in a || b, a && b ;; (*bool * bool - true, false*)
 "bon"^"soir" ;; (*string - "bonsoir"*)
 print_string "bonsoir" ;; (*unit - ()*)
-37 mod 2 + 7/5 ;; (*int - 2*)
+37 mod 3 + 7/5 ;; (*int - 2*)
 
 (*
 Exercice 2

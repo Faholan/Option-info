@@ -18,20 +18,23 @@ let x = ref 1 in
   while !x > 0 do (*Attention ! Boucle infinie !*)
     x := !x + 1
   done ;
-  print_int !x ;;
+  print_int !x
+;;
 
 let x = ref 1 in
   while !x > 0 do (*Attention, encore une boucle infinie*)
     print_int !x ;
     print_newline() ;
     x := !x + 1
-  done ;;
+  done
+;;
 (*Ecrit les entiers de 1 à l'infini, 1 par ligne*)
 let x = ref 0 in
   while !x > 0 do (*Pas exécuté*)
     x := !x + 1
   done ;
-  print_int !x ;; (*Affiche 0*)
+  print_int !x (*Affiche 0*)
+;;
 (*Enfin un script qui termine !*)
 
 (*
@@ -51,21 +54,17 @@ Exercice 4
 *)
 
 (*1 - Ecrire une fonction permutant circulairement un triplet*)
-let permut tuple =
-  let (a, b, c) = tuple in
-    b, c, a
-;;
+let permut (a, b, c) = b, c, a ;;
 
 (*2 - Ecrire une fonction, à l'aide du module random, permutant aléatoirement un triplet*)
-let permutrand tuple =
-  let (a, b, c) = tuple in
-    match Random.int(6) with
-      | 0 -> (a, b, c)
-      | 1 -> (a, c, b)
-      | 2 -> (b, a, c)
-      | 3 -> (b, c, a)
-      | 4 -> (c, a, b)
-      | _ -> (c, b, a)
+let permutrand (a, b, c) =
+  match Random.int(6) with
+    | 0 -> (a, b, c)
+    | 1 -> (a, c, b)
+    | 2 -> (b, a, c)
+    | 3 -> (b, c, a)
+    | 4 -> (c, a, b)
+    | _ -> (c, b, a)
 ;;
 
 (*
@@ -73,7 +72,7 @@ Exercice 5
 *)
 
 (*1 - Ecrire une fonction prenant trois entiers en argument et renvoyant le plus petit, puis une fonction renvoyant l'élément médian*)
-let _min a b = if a <= b then a else b;;
+let _min a b = if a <= b then a else b ;;
 let minimal a b c =
   let d = _min a b in
     _min d c
@@ -101,7 +100,7 @@ let maximal a b c =
     _max d c
 ;;
 
-let tri a b c -> (minimal a b c, median a b c, maximal a b c);;
+let tri a b c -> (minimal a b c, median a b c, maximal a b c) ;;
 
 (*
 Exercice 6
@@ -129,11 +128,7 @@ Exercice 8
   Ecrire une fonction calculant la somme des chiffres d'un entier en base 10
 *)
 
-let rec sommechiffres str =
-  match str with
-    | "" -> 0
-    | _ -> int_of_char str.[0] - 48 + sommechiffres (String.sub str 1 (String.length str - 1))
-;;
+let rec sommechiffres n = if n < 10 then n else n mod 10 + (sommechiffres (n/10)) ;;
 
 (*
 Exercice 9
@@ -165,7 +160,7 @@ let _to_float = function
   | N n -> float_of_int n
   | F x -> x
 ;;
-let _to_real x = if floor x = ceil x then N(int_of_float x) else F(x);;
+let _to_real x = if floor x = ceil x then N(int_of_float x) else F(x) ;;
 let real_add x y = _to_real ((_to_float x) +. (_to_float y)) ;;
 let real_times x y = _to_real ((_to_float x) *. (_to_float y)) ;;
 let real_leq x y = (_to_float x) <= (_to_float y) ;;

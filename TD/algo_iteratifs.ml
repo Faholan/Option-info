@@ -112,7 +112,7 @@ let simple q =
 
 let egal q1 q2 = simple q1 = simple q2 ;;
 
-let inf q1 q2 = (float_of_int q1.num) / (float_of_int q1.den) <= (float_of_int q2.num) / (float_of_int q2.den) ;;
+let inf q1 q2 = (float_of_int q1.num) /. (float_of_int q1.den) <= (float_of_int q2.num) /. (float_of_int q2.den) ;;
 
 (*d*)
 
@@ -144,9 +144,9 @@ let eqal pol1 pol2 =
 ;;
 
 let poly_der pol =
-  let final = Array.make (Array.length pol - 1) 0. in
+  let final = Array.make (Array.length pol - 1) 0 in
     for i = 1 to (Array.length pol - 1) do
-      final.(i - 1) <- (float_of_int i) *. pol.(i)
+      final.(i - 1) <- i * pol.(i)
     done
     final
 ;;

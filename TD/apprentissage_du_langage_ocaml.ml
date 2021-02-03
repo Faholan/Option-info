@@ -192,7 +192,7 @@ let sqr_for n =
 ;;
 
 let req sqr_req n = match n with
-  | 1 -> 1
+  | 0 -> 0
   | _ -> n * n + sqr_req (n - 1)
 ;;
 

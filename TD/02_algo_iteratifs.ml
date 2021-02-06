@@ -50,8 +50,8 @@ let moyenne tab =
   let tot = ref 0. in
     for i = 0 to (Array.length tab - 1) do
       tot := !tot +. tab.(i)
-    done
-    !tot /. (float_of_int (Array.length tab - 1))
+    done;
+    !tot /. (float_of_int (Array.length tab))
 ;;
 
 (*b*)

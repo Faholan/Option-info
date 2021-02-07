@@ -72,12 +72,14 @@ let ecart_max tab =
 (*c*)
 
 let gain_max tab =
-  let current_max = ref (tab.(1) -. tab.(0)) in
-    for i = 1 to (Array.length tab - 2) do
-      if tab.(i + 1) -. tab.(i) > !current_max then
-        current_max := tab.(i + 1) -. tab.(i)
+  let current_gain = ref (tab.(1) -. tab.(0)) and current_min = ref tab.(0) in
+    for i = 1 to (Array.length tab - 1) do
+      if tab.(i) -. !current_min > !current_gain then
+        current_gain := tab.(i) -. !current_min ;
+      if tab.(i) < !current_min then
+        current_min := tab.(i)
     done ;
-    !current_max
+    !current_gain
 ;;
 
 (*d*)

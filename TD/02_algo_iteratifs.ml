@@ -16,6 +16,7 @@ let prod_sca vect1 vect2 =
       tot := !tot +. vect1.(i) *. vect2.(i)
     done ;
     !tot
+;;
 
 
 (*Exercice 2*)
@@ -50,7 +51,7 @@ let moyenne tab =
   let tot = ref 0. in
     for i = 0 to (Array.length tab - 1) do
       tot := !tot +. tab.(i)
-    done;
+    done ;
     !tot /. (float_of_int (Array.length tab))
 ;;
 
@@ -75,7 +76,7 @@ let gain_max tab =
     for i = 1 to (Array.length tab - 2) do
       if tab.(i + 1) -. tab.(i) > current_max then
         current_max := tab.(i + 1) -. tab.(i)
-    done
+    done ;
     !current_max
 ;;
 
@@ -88,7 +89,7 @@ let duree_max tab =
         current_streak := !current_streak + 1
       else
         max_streak := max !max_streak !current_streak
-    done
+    done ;
     max !current_streak !max_streak
 ;;
 
@@ -147,7 +148,7 @@ let poly_der pol =
   let final = Array.make (Array.length pol - 1) 0 in
     for i = 1 to (Array.length pol - 1) do
       final.(i - 1) <- i * pol.(i)
-    done
+    done ;
     final
 ;;
 

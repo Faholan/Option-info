@@ -93,7 +93,7 @@ let median a b c =
   )
 ;;
 
-(*3 - En déduire une fonction trian trois entiers dans l'ordre croissant*)
+(*3 - En déduire une fonction triant trois entiers dans l'ordre croissant*)
 let _max a b = if a >= b then a else b;;
 let maximal a b c =
   let d = _max a b in

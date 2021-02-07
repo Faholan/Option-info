@@ -87,8 +87,10 @@ let duree_max tab =
     for i = 1 to (Array.length tab - 1) do
       if tab.(i) >= tab.(i - 1) then
         current_streak := !current_streak + 1
-      else
-        max_streak := max !max_streak !current_streak
+      else (
+        max_streak := max !max_streak !current_streak ;
+        current_streak := 0
+      )
     done ;
     max !current_streak !max_streak
 ;;

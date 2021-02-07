@@ -4,14 +4,14 @@
 
 let somme vect1 vect2 =
   let summed = Array.make (Array.length vect1) 0. in
-    for i = 0 to (length - 1) do
+    for i = 0 to (Array.length vect1 - 1) do
       summed.(i) <- vect1.(i) +. vect2.(i)
     done ;
     summed
 ;;
 
 let prod_sca vect1 vect2 =
-  let tot = ref 0 in
+  let tot = ref 0. in
     for i = 0 to (Array.length vect1 - 1) do
       tot := !tot +. vect1.(i) *. vect2.(i)
     done ;
@@ -72,9 +72,9 @@ let ecart_max tab =
 (*c*)
 
 let gain_max tab =
-  current_max = ref tab.(1) -. tab.(0) in
+  let current_max = ref (tab.(1) -. tab.(0)) in
     for i = 1 to (Array.length tab - 2) do
-      if tab.(i + 1) -. tab.(i) > current_max then
+      if tab.(i + 1) -. tab.(i) > !current_max then
         current_max := tab.(i + 1) -. tab.(i)
     done ;
     !current_max
@@ -119,7 +119,7 @@ let inf q1 q2 = (float_of_int q1.num) /. (float_of_int q1.den) <= (float_of_int 
 
 let rec _puissance integer n = match n with
   | 0 -> 1
-  | _ -> integer * (_puissance ingeger (n - 1))
+  | _ -> integer * (_puissance integer (n - 1))
 ;;
 let puissance q1 n = {num = _puissance q1.num n ; den = _puissance q2.num n} ;;
 
@@ -181,7 +181,7 @@ let poly_mult poly_1 poly_2 =
 (*e*)
 
 let evalue poly x =
-  final = ref 0 in
+  let final = ref 0 in
     for i = 0 to degre poly do
       final := !final + poly.(i) * (_puissance x i)
     done ;
@@ -189,7 +189,7 @@ let evalue poly x =
 ;;
 
 let rec evalue_2 poly x =
-  let dpoly = degre poly
+  let dpoly = degre poly in
     match dpoly with
       | -1 -> 0
       | _ -> poly.(0) + x * evalue_2 (Array.sub poly 1 dpoly) x

@@ -174,7 +174,7 @@ let conj z = {re = z.re : im = - z.im} ;;
 let module z = sqrt (z.re ** 2. +. z.im ** 2.) ;;
 let mult z1 z2 = {re = z1.re *. z2.re -. z1.im * z2.im ; im = z1.re *. z2.im +. z1.im * z2.re} ;;
 let rec puissance z n = match n with
-  | 0 -> 1
+  | 0 -> {re = 1. : im = 0.}
   | 1 -> z
   | _ -> mult z (puissance z (n-1))
 ;;

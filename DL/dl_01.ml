@@ -269,4 +269,4 @@ let rectangleToutZero table =
 ;;
 
 (*Question 13*)
-(*Complexité : O(n²) (Parcours de liste : O(n) * plusGrandRectangleHistogramme : O(n))*)
+(*Complexité : O(n) (colonneZeros: O(n) + Parcours de liste : O(l) * plusGrandRectangleHistogramme : O(c), avec c le nombre de colonnes et l le nombre de lignes)*)

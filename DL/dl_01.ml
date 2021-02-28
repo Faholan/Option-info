@@ -23,10 +23,11 @@ SOFTWARE.
 *)
 
 (*
-Conventions d'écriture adoptées
+Conventions d'écriture adoptées :
 
 La convention d'écriture est une adaptation libre de flake8.
 Les fonctions dont le nom est préfixé par _ sont destinées à un usage interne et ne font pas partie de l'API public.
+snake_case a été respecté au maximum, dans les limites du sujet qui impose l'usage de camelCase
 *)
 
 (*Partie 1 : Recherche unidimensionnelle*)
@@ -61,7 +62,7 @@ let nombreZerosMaximum table =
     max !current !current_max
 ;;
 
-(*La complexité est bien en O(n) : on ne parcours qu'une seule fois la liste.*)
+(*La complexité est bien en O(n) : on ne parcours qu'une seule fois le tableau, de gauche à droite.*)
 
 (*Partie 2 : De la 1D vers la 2D*)
 
@@ -84,8 +85,7 @@ let rec _can_increase table right down up =
     table.(up).(right) = 0
   else
     table.(up).(right) = 0 && _can_increase table right down (up + 1)
-;;
-(*Est-ce qute tous les éléments d'une colonne donnée sont des 0*)
+;; (*Complexité : O(n)*)
 
 let rectangleHautDroit table i j =
   if table.(i).(j) = 1 then
@@ -93,7 +93,7 @@ let rectangleHautDroit table i j =
   else
   begin
     let up = ref i and right = ref j and area_max = ref 1 and length = Array.length table.(0) in
-      while !up > 0 && table.(!up - 1).(j) = 0 do (*O(n)*)
+      while !up > 0 && table.(!up - 1).(j) = 0 do (*O(n) : parcours d'une colonne*)
         up := !up - 1
       done ;
       (*Coordonée en i maximale*)
@@ -101,8 +101,8 @@ let rectangleHautDroit table i j =
       while !up <= i do (*O(n)*)
         while !right < (length - 1) && _can_increase table (!right + 1) i !up do
           (*On étend vers la droite progressivement*)
-          right := !right + 1 (*O(n)*)
-        done ;
+          right := !right + 1
+        done ; (*O(n) : complexité de _can_increase, les répétitions étant dues au nomre de colonnes, supposé fixé*)
         area_max := max !area_max ((i - !up + 1) * (!right - j + 1)) ;
         up := !up + 1 ;
         (*Réduction d'1 de la hauteur considérée*)
@@ -115,7 +115,7 @@ let rectangleHautDroit table i j =
 
 let rec _naif table i j =
   (*Analyse du tableau avec le coin inférieur gauche balayant les lignes de gauche à droite, et de bas en haut*)
-  if j = Array.length table then (*Fin d eligne atteinte*)
+  if j = Array.length table then (*Fin de ligne atteinte*)
     if i = 0 then
       if table.(i).(j) = 0 then 1 else 0 (*Coin supérieur droit*)
     else
@@ -128,8 +128,8 @@ let max_rectangles_naif table = _naif table (Array.length table) 0 ;;
 
 (*
 La fonction _can_increase est de complexité O(n)
-La  fonction rectangleHautDroit est de complexité 0(n^3)
-La fonction _naif est de complexité 0(n^5) (n itérations sur j par itération sur i)
+La  fonction rectangleHautDroit est de complexité 0(n²)
+La fonction _naif est de complexité 0(n**3) (parcours de chaque ligne)
 *)
 
 (*Question 5*)
@@ -148,6 +148,8 @@ let colonneZeros table =
     final
 ;;
 
+(*Question 6*)
+
 (*Cet algorithme est de complexité O(n) (le tableau est parcouru une et une seule fois)*)
 
 (*Partie 3 : Algorithme optimisé*)
@@ -155,33 +157,33 @@ let colonneZeros table =
 (*Question 7*)
 
 (*
-On considère la suite K[i] des valeurs prises par j pour une valeur donnée de i.
-La suite K[i] est une suite entière, strictement décroissante et minorée par 0 :
-  minorée par 0 car j correspond à des indices d'éléments d'une liste
-  décroissante car dans le cas où l'algorithme ne se termine pas, j prend la valeur L[j-1] <= j - 1 < j.
+1) Monrer que l’algorithme calcule correctement les valeurs de L
+On considère la suite K(i) des valeurs prises par j pour une valeur donnée de i.
+La suite K(i) est une suite entière, strictement décroissante et minorée par 0 :
+• minorée par 0 car j correspond à des indices d'éléments d'une liste
+• décroissante car dans le cas où l'algorithme ne se termine pas, j prend la valeur L[j-1] ≤ j - 1 < j.
 Cela garantit donc la terminaison de l'algorithme.
 
-De plus, on a l'invariant de boucle suivant pour tout k appartenant à K[i] : histo[k] >= histo[i]
- En effet, dans le cas où la boucle poursuit son itération, j prend la valeur L[j - 1].
- Or L[j-1] est tel que pour tout k appartenant à [L[j-1], j - 1], histo[k] >= histo[j - 1]
- De plus, histo[j - 1] >= histo[j] d'après la condition de boucle.
- D'où, pour tout k appartenant à [L[j-1], j], histo[k] >= histo[j]
- avec histo[j] >= histo[i] par construction.
+De plus, on a l'invariant de boucle suivant pour tout k appartenant à K(i) : histo[k] ≥ histo[i]
+En effet, dans le cas où la boucle poursuit son itération, j prend la valeur L[j-1].
+Or L[j-1] est tel que pour tout k appartenant à [L[j-1], j-1], histo[k] ≥ histo[j-1]
+De plus, histo[j-1] ≥ histo[j] d'après la condition de boucle.
+D'où, pour tout k appartenant à [L[j-1], j], histo[k] ≥ histo[j], avec histo[j] ≥ histo[i] par construction.
 
 Il n'y a que deux conditions pour sortir de la boucle :
-  j = 0, dans ce cas j est le plus petit entier possible
-  histo[j-1] < histo[i], et dans ce cas on a bien que j est le plus petit entier respectant la condition.
+• j = 0, dans ce cas j est le plus petit entier indice d’un élément de la liste
+• histo[j-1] < histo[i], et dans ce cas on a bien que j est le plus petit entier respectant la condition.
 
-Pour histo = [1, 2, 3, ..., n-1, n, n, n-1, ..., 2, 1] on a :
-  Pour tout k appartenant à [1, n - 1], histo[k - 1] < histo[k]
-  Sur la première moitié du tableau, on a L[i] = i, en une opération.
-  Sur la deuxième moitié du tableau, on a L[i] = L[i-1] - 1 :
-    L[i-1] correspond à l'élément de la première partie égal à histo[i - 1]
-    et histo[L[i - 1] - 1] = histo[i] : une deuxième opération
-    avec histo[L[i - 1] - 2] < histo[i] (si i != 2n) : une troisième opération
+2) Justifier que l’algorithme fonctionne en temps O(n) pour histo = [1, 2, 3, ..., n-1, n, n, n-1, ..., 2, 1]
+On a :
+Pour tout k appartenant à [1, n - 1], histo[k-1] < histo[k]
+Sur la première moitié du tableau, on a L[i] = i, en une opération. (histo[i-1] < histo[i] pour i > 0)
+Sur la deuxième moitié du tableau, on a L[i] = L[i-1] - 1 :
+L[i-1] correspond à l'élément de la première partie égal à histo[i-1]
+et histo[L[i - 1] - 1] = histo[i] : une deuxième opération
+avec histo[L[i - 1] - 2] < histo[i] (si i ≠ 2n) : une troisième opération
 
-  Ainsi, l'algorithme s'effectue en n + 3n opérations :
-  Il est bien de complexité O(n)
+Ainsi, l’algorithme est bien de complexité O(n), avec un nombre d’opérations majoré par 3 pour chaque élément.
 *)
 
 (*Question 8*)
@@ -217,30 +219,28 @@ let calculeR table =
 (*Question 9*)
 
 (*
-Pour tout k appartenant à [L[i], R[i]], on a par définition histo[i] <= histo[k]
-Ainsi, un rectangle de hauteur histo[i] sera inclus dans celui de hauteur histo[k].
-En mettant cote à cote ces rectangles de hauteur histo[i], on obtient qu'un rectangle
-allant de L[i] à R[i] de hauteur histo[i] est inclus dans l'histogramme (son bord supérieur se situe en tout point en dessous de celui de l'histogramme.)
+Pour tout k appartenant à [L[i], R[i]], on a par définition de L[i] et de R[i] histo[i] ≤ histo[k]
+Ainsi, si l’on considère un rectangle allant de L[i] à R[i] de hauteur histo[i], son bord supérieur se situe en tout point en dessous de l’histgramme : il est inclus dans l’histogramme.
 *)
 
 (*Question 10*)
 
 (*
 Soit un rectangle d'aire maximale inclus dans l'histogramme.
-pour tout k appartenant à [l, r], histo[k] >= h. *
-Il existe un i appartenant à [l, r] tel que histo[i] = h
+Pour tout k appartenant à [l, r], histo[k] ≥ h. (1)
+Il existe donc un i appartenant à [l, r] tel que histo[i] = h
 En effet, dans le cas contraire, on aurait :
-  pour tout k dans [L, r], histo[k] > h et donc un rectangle de hauteur h + 1 conviendrait, et son aire serait strictement supérieure à celle de notre rectangle.
-De plus, on a nécessairement : **
-  l = 0 ou histo[l - 1] < h = histo[i]
-  r = n - 1 ou histo[r + 1] < h = histo[i]
-  (Dans le cas contraire, on pourrait étendre le rectangle)
-Et les propriétés * et ** impliquent donc :
-l = L[i] et r = R[i] par définition de l et r.
+Pour tout k dans [l, r], histo[k] > h et donc un rectangle de hauteur h + 1 serait également inclus dans l’histogramme, et son aire serait strictement supérieure à celle de notre rectangle, ce qui est contraire à la définition de h.
+De plus, on a nécessairement : (2)
+l = 0 ou histo[l - 1] < h = histo[i]
+r = n - 1 ou histo[r + 1] < h = histo[i]
+(Dans le cas contraire, on pourrait étendre le rectangle considéré vers la gauche ou vers la droite avec la même hauteur, et dans ce cas son aire ne serait pas maximale, ce qui est contraire à l’hypothèse)
+Les propriétés (1)  et (2) impliquent :
+l = L[i] et r = R[i] par définition de L et R.
 Il existe donc bel et bien i appartenant à [l, r] tel que :
-  - h = histo[i]
-  - l = L[i]
-  - r = R[i]
+- h = histo[i]
+- l = L[i]
+- r = R[i]
 *)
 
 (*Question 11*)
@@ -254,7 +254,6 @@ let plusGrandRectangleHistogramme histo =
     done ;
     !current
 ;;
-(*Complexité : O(n) (parcours de liste : O(n) plus calculeL et calculeR tous deux O(n))*)
 
 (*Question 12*)
 
@@ -269,4 +268,8 @@ let rectangleToutZero table =
 ;;
 
 (*Question 13*)
-(*Complexité : O(n) (colonneZeros: O(n) + Parcours de liste : O(l) * plusGrandRectangleHistogramme : O(c), avec c le nombre de colonnes et l le nombre de lignes)*)
+(*
+La complexité de rectangleToutZero est en O(n) :
+colonneZeros est de complexité O(n) + Parcours de liste : O(n) * plusGrandRectangleHistogramme
+plusGrandRectangleHistogramme ne travaille que sur une ligne, et est donc de complexité majorée par une constante correspondant au pire des cas. (le nombre de colonnes est constant)
+*)

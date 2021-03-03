@@ -61,7 +61,7 @@ Exercice 3
 let rec palindrome str = match String.length str with
   | 0 -> true
   | 1 -> true
-  | _ -> str.[0] = str.[Strin.length str - 1] && palindrome (String.sub str 1 (String.length str - 2))
+  | n -> str.[0] = str.[n - 1] && palindrome (String.sub str 1 (n - 2))
 ;;
 
 (*
@@ -97,7 +97,7 @@ let rec _couple n current total =
 
 let couple n = _couple n 0 0 ;;
 
-let numero_final (p, q) = q + (p + q) * ((p + q) + 1) / 2 ;;
+let numero_final (p, q) = q + (p + q) * (p + q + 1) / 2 ;;
 
 (*
 Exercice 6

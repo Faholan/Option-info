@@ -250,8 +250,7 @@ let rec _pascal l n =
     printer l ;
     print_char '\n' ;
     if n > 0 then
-      let next = 1::(next_line l) in
-        _pascal next (n - 1)
+      _pascal (1::(next_line l)) (n - 1)
   end
 ;;
 

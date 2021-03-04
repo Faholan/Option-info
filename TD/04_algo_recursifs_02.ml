@@ -30,22 +30,22 @@ Exercice 1
 
 let remove elem l = List.filter (fun x -> x <> elem) l ;;
 
-let rec redondances l = match l with
+let rec redondances = function
   [] -> []
   | h::t -> h::(redondances (remove h t))
 ;;
 
-let rec aplati l = match l with
+let rec aplati = function
   [] -> []
   | h::t -> h @ (aplati t)
 ;;
 
-let rec rev l = match l with
+let rec rev = function
   [] -> []
   | h::t -> rev t @ [h]
 ;;
 
-let rec iter f l = match l with
+let rec iter f = function
   [] -> ()
   | h::t -> begin
     f h ;
@@ -59,31 +59,31 @@ let rec fold_left f l a = match l with
   | h::t -> f (fold_left f t a) h
 ;;
 
-let rec find p l = match l with
+let rec find p = function
   [] -> failwith "not found"
   | h::t when p h -> h
   | h::t -> find p t
 ;;
 
-let rec filter p l = match l with
+let rec filter p = function
   [] -> []
   | h::t when p h -> h::(filter p t)
   | h::t -> filter p t
 ;;
 
-let rec assoc a l = match l with
+let rec assoc a = function
   [] -> failwith "not found"
   | (b, c)::t when b = a -> c
   | _::t -> assoc a t
 ;;
 
-let rec split l = match l with
+let rec split = function
   [] -> [], []
   | (a, b)::t -> let c, d = split t in
     a::c, b::d
 ;;
 
-let rec merge ord l l' = match l' with
+let rec merge ord l = function
   [] -> l
   | h'::t' -> match l with
     [] -> h'::t'
@@ -156,16 +156,16 @@ let rec _decomp n p = match n with
   | _ -> _decomp n (p+1)
 ;;
 
-let decomp n = match n with
-  | _ when n < 2 -> []
-  | _ -> _decomp n 2
+let decomp = function
+  | n when n < 2 -> []
+  | n -> _decomp n 2
 ;;
 
 (*b - fonction isprime*)
 
 let isprime n = List.length (decomp n) = 1 ;;
 
-(*c - nombres premiers inférieurs à 1000 (un algorithme plus efficace est possible avec des tableaux et le crible d'Erastothème)*)
+(*c - nombres premiers inférieurs à 1000*)
 let rec intervalle a b =
   if a > b then
     []
@@ -173,7 +173,32 @@ let rec intervalle a b =
     a::(intervalle (a+1) b)
 ;;
 
+(*Méthode 1 peu efficace*)
 let nb_premiers n = List.filter isprime (intervalle 2 n) ;;
+
+(*Méthode 2, crible d'Eraosthème*)
+let rec _eratostheme = function
+  [] -> []
+  | h::t -> h::(_eratostheme (List.filter (fun x -> x mod h <> 0) t))
+;;
+
+let eratostheme n = _eratostheme (intervalle 2 n) ;;
+
+(*
+[
+  2; 3; 5; 7; 11; 13; 17; 19; 23; 29; 31; 37; 41; 43; 47; 53; 59; 61; 67; 71;
+  73; 79; 83; 89; 97; 101; 103; 107; 109; 113; 127; 131; 137; 139; 149; 151;
+  157; 163; 167; 173; 179; 181; 191; 193; 197; 199; 211; 223; 227; 229; 233;
+  239; 241; 251; 257; 263; 269; 271; 277; 281; 283; 293; 307; 311; 313; 317;
+  331; 337; 347; 349; 353; 359; 367; 373; 379; 383; 389; 397; 401; 409; 419;
+  421; 431; 433; 439; 443; 449; 457; 461; 463; 467; 479; 487; 491; 499; 503;
+  509; 521; 523; 541; 547; 557; 563; 569; 571; 577; 587; 593; 599; 601; 607;
+  613; 617; 619; 631; 641; 643; 647; 653; 659; 661; 673; 677; 683; 691; 701;
+  709; 719; 727; 733; 739; 743; 751; 757; 761; 769; 773; 787; 797; 809; 811;
+  821; 823; 827; 829; 839; 853; 857; 859; 863; 877; 881; 883; 887; 907; 911;
+  919; 929; 937; 941; 947; 953; 967; 971; 977; 983; 991; 997
+]
+*)
 
 (*
 Exercice 5

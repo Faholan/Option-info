@@ -40,9 +40,11 @@ let rec aplati = function
   | h::t -> h @ (aplati t)
 ;;
 
-let rec rev = function
-  [] -> []
-  | h::t -> rev t @ [h]
+let rev l =
+  let _rev m = function
+    [] -> m
+    | h::t -> _rev (h::m) t
+  in _rev [] l
 ;;
 
 let rec iter f = function

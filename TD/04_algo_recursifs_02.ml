@@ -150,10 +150,14 @@ Exercice 4
 
 (*a - décomposition d'un nombre premier*)
 
-let rec _decomp n p = match n with
-  1 -> []
-  | _ when n mod p = 0 -> p::(_decomp (n/p) (p+1))
-  | _ -> _decomp n (p+1)
+let rec _decomp n p =
+  if p * p > n then
+    [n]
+  else
+    if n mod p = 0 then
+      p::(_decomp (n/p) p)
+    else
+      _decomp n (p+1)
 ;;
 
 let decomp = function

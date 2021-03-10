@@ -247,14 +247,10 @@ Exercice 7
 
 (*a*)
 
-let rec binomial p n =
-  if p > n then
-    0
-  else
-    if p = n || p = 0 then
-      1
-    else
-        binomial p (n - 1) + binomial (p - 1) (n - 1)
+let rec binomial p n = match p with
+  | 0 -> 1
+  | _ when p > n -> 0
+  | _ -> binomial p (n - 1) + binomial (p - 1) (n - 1)
 ;;
 
 (*b*)
@@ -266,7 +262,7 @@ let rec next_line = function
 ;;
 
 let rec printer = function
-  [] -> ()
+  [] -> print_char '\n'
   | h::t -> begin
     print_int h ;
     print_char ' ' ;
@@ -277,7 +273,6 @@ let rec printer = function
 let rec _pascal l n =
   begin
     printer l ;
-    print_char '\n' ;
     if n > 0 then
       _pascal (1::(next_line l)) (n - 1)
   end

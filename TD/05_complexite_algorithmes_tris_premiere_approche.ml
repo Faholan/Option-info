@@ -115,19 +115,32 @@ let degre poly =
 ;;
 
 (*c*)
+let print_monome = function
+  | (a, 0) -> print_int a
+  | (a, k) -> begin
+    if a <> 1 then
+      print_int a ;
+    if k = 1 then
+      print_string "X"
+    else
+      begin
+        print_string "X^" ;
+        print_int k
+      end
+  end
+;;
 
 let rec print_polynome = function
   | [] -> print_char '0'
-  | [(a, k)] ->
-    print_int a ;
-    print_string "X^" ;
-    print_int k
-  | (a, k)::t ->
+  | [(a, k)] -> print_monome (a, k)
+  | (a, k)::t when a < 0 ->
+    print_polynome t ;
+    print_string " - " ;
+    print_monome (-a, k) ;
+  | (a, k)::t->
     print_polynome t ;
     print_string " + " ;
-    print_int a ;
-    print_string "X^" ;
-    print_int k
+    print_monome (a, k)
 ;;
 
 (*d*)
@@ -180,7 +193,7 @@ let facto p a =
   let rec _facto p = match p with
     | [] -> []
     | (b, k)::t -> (b, k-1)::_facto (poly_sum_2 [(a * b, k-1)] t)
-  in _facto (List.rev p)
+  in List.rev (_facto (List.rev p))
 ;;
 
 (*

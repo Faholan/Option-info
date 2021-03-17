@@ -166,6 +166,22 @@ let rec eval x = function
 ;;
 
 (*f*)
+let rec poly_sum_2 p1 p2 = match p1 with
+  | [] -> p2
+  | (a, k)::t -> match p2 with
+    | [] -> p1
+    | (a', k')::t' when k > k' -> (a, k)::(poly_sum_2 t p2)
+    | (a', k')::t' when k < k' -> (a', k')::(poly_sum_2 p1 t')
+    | (a', k')::t' when a = -a' -> poly_sum_2 t t'
+    | (a', k')::t' -> (a + a', k)::(poly_sum_2 t t')
+;; (*Grands degrés d'abord*)
+
+let facto p a =
+  let rec _facto p = match p with
+    | [] -> []
+    | (b, k)::t -> (b, k-1)::_facto (poly_sum_2 [(a * b, k-1)] t)
+  in _facto (List.rev p)
+;;
 
 (*
 Exercice 5

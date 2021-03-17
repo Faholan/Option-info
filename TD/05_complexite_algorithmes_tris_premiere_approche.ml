@@ -206,7 +206,7 @@ let croissant t =
   let current, current_max, value = ref 1, ref 0, ref t.(0) in
     for i = 1 to (Array.length t - 1) do
       if t.(i) >= !value then
-        current := !current + 1
+        incr current
       else
         begin
           value := t.(i) ;
@@ -224,7 +224,7 @@ let croissant_lst t =
       if t.(i) >= List.hd !values then
         begin
           values := t.(i)::!values ;
-          current := !current + 1
+          incr current
         end
       else
         begin

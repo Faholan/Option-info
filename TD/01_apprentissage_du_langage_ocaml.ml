@@ -123,7 +123,7 @@ let maximal a b c =
     _max d c
 ;;
 
-let tri a b c -> (minimal a b c, median a b c, maximal a b c) ;;
+let tri a b c = (minimal a b c, median a b c, maximal a b c) ;;
 
 (*
 Exercice 6

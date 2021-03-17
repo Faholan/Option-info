@@ -92,6 +92,12 @@ Exercice 4
   Polynômes creux
 *)
 
+(*a*)
+let valuation = function
+  | [] -> -1
+  | (_, n)::_ -> n
+;;
+
 (*b*)
 
 let rec coefs = function

@@ -39,7 +39,7 @@ let _decroissante = function
   | a::b::t -> if a > b then false else _croissante (b::t)
 ;;
 
-let monotone = function
+let rec monotone = function
   | [] -> failwith "Empty list"
   | [_] -> true
   | a::b::t when a < b -> _croissante (b::t)
@@ -70,7 +70,7 @@ let tri m l =
   let table = compte m l in
     let rec aux = function
       | i when i = m -> []
-      | i -> (add i t.(i) (aux (i+1)))
+      | i -> (add i table.(i) (aux (i+1)))
     in aux 0
 ;;
 
@@ -101,7 +101,7 @@ let rec coefs = function
 ;;
 
 let degre poly =
-  let rec _degre pol = function
+  let rec _degre = function
     | [] -> -1
     | (a, k)::t when a = 0 -> _degre t
     | (a, k)::t -> k
@@ -117,11 +117,11 @@ let rec print_polynome = function
     print_string "X^" ;
     print_int k
   | (a, k)::t ->
+    print_polynome t ;
+    print_string " + " ;
     print_int a ;
     print_string "X^" ;
-    print_int k ;
-    print_string " + " ;
-    print_polynome t
+    print_int k
 ;;
 
 (*d*)
@@ -160,7 +160,6 @@ let rec eval x = function
 ;;
 
 (*f*)
-let poly_q p a = poly_add (poly_mult [(1, 1)] p) (poly_mult [(-a, 0)]) ;;
 
 (*
 Exercice 5
@@ -168,42 +167,41 @@ Exercice 5
 
 (*a*)
 
-let croissant l =
-  let current = ref 0 and current_max = ref 0 and value = ref (List.hd l) in
-    let rec adder = function
-      | [] -> ()
-      | h::t when h >= !value ->
-        value := h ;
-        current := !current + 1 ;
-        adder t
-      | h::t ->
-        value := h ;
-        current_max := (max !current !current_max) ;
-        current := 1 ;
-        adder t
-    in adder l ;
-    max !current !current_max
+let croissant t =
+  let current, current_max, value = ref 1, ref 0, ref t.(0) in
+    for i = 1 to (Array.length t - 1) do
+      if t.(i) >= !value then
+        current := !current + 1
+      else
+        begin
+          value := t.(i) ;
+          current_max := max !current !current_max ;
+          current := 1
+        end ;
+      value := t.(i)
+    done ;
+  max !current !current_max
 ;;
 
-let croissant_lst l =
-  let current = ref 1 and current_max = ref 0 and values = ref [List.hd l] and values_max = ref [] in
-    let rec adder = function
-      | [] -> ()
-      | h::t when h >= List.hd !values ->
-        values := h::!values ;
-        current := !current + 1 ;
-        adder t
-      | h::t when !current > !current_max ->
-        values_max := !values ;
-        current_max := !current ;
-        current := 1 ;
-        values := [h] ;
-        adder t
-      | h::t ->
-        current := 1 ;
-        values := [h] ;
-        adder t
-    in adder (List.tl l) ;
+let croissant_lst t =
+  let current, current_max, values, values_max = ref 1, ref 0, ref [t.(0)], ref [] in
+    for i = 1 to (Array.length t - 1) do
+      if t.(i) >= List.hd !values then
+        begin
+          values := t.(i)::!values ;
+          current := !current + 1
+        end
+      else
+        begin
+          if !current > !current_max then
+            begin
+              values_max := !values ;
+              current_max := !current
+            end ;
+          current := 1 ;
+          values := [t.(i)]
+        end
+    done ;
     if !current > !current_max then
       !values
     else

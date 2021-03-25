@@ -127,6 +127,12 @@ La médiane d'un ensemble est donc unique.
 (*b*)
 
 (*quicksort*)
+let echange i j t =
+  let aux = t.(i) in
+    t.(i) <- t.(j) ;
+    t.(j) <- aux
+;;
+
 let separation t i j =
   let g = ref (i + 1) and d = ref j in
     while !d >= !g do
@@ -198,3 +204,44 @@ let selection_2 t k =
     done ;
     !last_max
 ;;
+
+(*c*)
+
+let partition t i j =
+  let g = ref (i + 1) and d = ref j in
+    while !d >= !g do
+      if t.(!g) <= t.(i) then
+        incr g
+      else (
+        echange !g !d t ;
+        decr d
+      )
+    done ;
+    if !d > i then
+      echange i !d t ;
+    !g - i - 1
+;;
+
+(*d*)
+
+let selection_3 t k =
+  let rec selection_aux i j f =
+    let d = partition t i j in
+      if d = f then
+        t.(i + d)
+      else
+        if d > f then
+          selection_aux i (i + d - 1) f
+        else
+          selection_aux (i + d + 1) j (f - d - 1)
+  in selection_aux 0 (Array.length t - 1) (k - 1) (*Numérotation à partir de 0 en interne*)
+;;
+
+(*
+Le pire des cas correspond à k = 1 et, à chaque itération, d = 0
+
+On a alors :
+
+T(n) = n - 1 + T(n-1) = sum(i = 1, n, i - 1) = n(n+1)/2 - n = n(n-1)
+La complexité dans le pire des cas est en O(n²)
+*)

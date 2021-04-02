@@ -39,7 +39,7 @@ let deuxieme t =
     done ;
     !i2
 ;;
-(*2n comparaisons au maximum.*)
+(*2n - 3 comparaisons au maximum.*)
 
 (*
 Exercice 2
@@ -54,7 +54,7 @@ let retourne t i =
       t.(i - j) <- aux
   done
 ;;
-(*Complexité : O(i)*)
+(*Complexité : Θ(i)*)
 
 (*b*)
 (*Il faut retoruner la liste jusqu'à l'indice du plus grand élément, puis toute la liste*)

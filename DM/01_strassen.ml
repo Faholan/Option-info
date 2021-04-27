@@ -27,11 +27,19 @@ Exercice 1
   Produit naïf de matrices
 *)
 
+let maker n1 n2 x =
+  let final = Array.make n1 [||] in
+    for i = 0 to n1 - 1 do
+      final.(i) <- Array.make n2 x
+    done ;
+    final
+;;
+
 let produit m1 m2 =
-  let final = Array.make (Array.length m1) (Array.make (Array.length m2.(0)) 0) in
+  let final = maker (Array.length m1) (Array.length m2.(0)) 0 in
     for i = 0 to Array.length m1 - 1 do
       for j = 0 to Array.length m2.(i) - 1 do
-        for k = 0 to Array.length m2 do
+        for k = 0 to Array.length m2 - 1 do
           final.(i).(j) <- final.(i).(j) + m1.(i).(k) * m2.(k).(j)
         done
       done
@@ -64,9 +72,11 @@ Question 2
   Fonction morceaux
 *)
 
+let make_sqr n x = maker n n x ;;
+
 let morceaux m =
   let n = Array.length m in
-    let a1, a2, a3, a4 = Array.make (n/2) (Array.make (n/2) 0), Array.make (n/2) (Array.make (n/2) 0), Array.make (n/2) (Array.make (n/2) 0), Array.make (n/2) (Array.make (n/2) 0) in
+    let a1, a2, a3, a4 = make_sqr (n/2) 0, make_sqr (n/2) 0, make_sqr (n/2) 0, make_sqr (n/2) 0 in
       for i = 0 to n/2 - 1 do
         for j = 0 to n/2 - 1 do
           a1.(i).(j) <- m.(i).(j) ;
@@ -85,9 +95,9 @@ Question 3
 
 let recombine a1 a2 a3 a4 =
   let n = Array.length a1 in
-    let m = Array.make (2*n) (Array.make (2*n) 0) in
-      for i = 0 to n do
-        for j = 0 to n do
+    let m = make_sqr (2*n) 0 in
+      for i = 0 to n - 1 do
+        for j = 0 to n - 1 do
           m.(i).(j) <- a1.(i).(j) ;
           m.(i).(n + j) <- a2.(i).(j) ;
           m.(n + i).(j) <- a3.(i).(j) ;
@@ -103,9 +113,9 @@ Question 4
 
 let somme m1 m2 =
   let n = Array.length m1 in
-    let final = Array.make n (Array.make n 0) in
-      for i = 0 to n do
-        for j = 0 to n do
+    let final = make_sqr n 0 in
+      for i = 0 to n - 1 do
+        for j = 0 to n - 1 do
           final.(i).(j) <- m1.(i).(j) + m2.(i).(j)
         done
       done ;
@@ -114,9 +124,9 @@ let somme m1 m2 =
 
 let difference m1 m2 =
   let n = Array.length m1 in
-    let final = Array.make n (Array.make n 0) in
-      for i = 0 to n do
-        for j = 0 to n do
+    let final = make_sqr n 0 in
+      for i = 0 to n - 1 do
+        for j = 0 to n - 1 do
           final.(i).(j) <- m1.(i).(j) - m2.(i).(j)
         done
       done ;
@@ -124,10 +134,9 @@ let difference m1 m2 =
 ;;
 
 let rec prodst m1 m2 = match Array.length m1 with
-  | 0 -> [||]
-  | 1 -> [|m1.(0).(0) * m2.(0).(0)|]
-  | n ->
-    let a1, a2, a3, a4 = morceaux m1 in
+  | 0 -> [|[||]|]
+  | 1 -> [|[|m1.(0).(0) * m2.(0).(0)|]|]
+  | n -> let a1, a2, a3, a4 = morceaux m1 in
       let b1, b2, b3, b4 = morceaux m2 in
         let f1 = prodst a1 (difference b2 b4) and f2 = prodst (somme a1 a2) b4 and f3 = prodst (somme a3 a4) b1 and f4 = prodst a4 (difference b3 b1) and f5 = prodst (somme a1 a4) (somme b1 b4) and f6 = prodst (difference a2 a4) (somme b3 b4) and f7 = prodst (difference a1 a3) (somme b1 b2) in
           let c1 = somme f6 (somme f5 (difference f4 f2)) and c2 = somme f1 f2 and c3 = somme f3 f4 and c4 = somme (difference f1 f3) (difference f5 f7) in
@@ -145,7 +154,7 @@ Il suffit, dans le cas où la taille des matrices n'est pas paire, de les compl�
 
 let morceaux_2 m =
   let k = (Array.length m)/2 + 1 in
-    let a1, a2, a3, a4 = Array.make k (Array.make k 0), Array.make k (Array.make k 0), Array.make k (Array.make k 0), Array.make k (Array.make k 0) in
+    let a1, a2, a3, a4 = make_sqr k 0, make_sqr k 0, make_sqr k 0, make_sqr k 0 in
       for i = 0 to k - 1 do
         for j = 0 to k - 1 do
           a1.(i).(j) <- m.(i).(j) ;
@@ -162,24 +171,24 @@ let morceaux_2 m =
 
 let recombine_2 a1 a2 a3 a4 =
   let k = Array.length a1 in
-    let final = Array.make (2 * k - 1) (Array.make (2 * k - 1) 0) in
+    let final = make_sqr (2 * k - 1) 0 in
       for i = 0 to k - 1 do
         for j = 0 to k - 1 do
           final.(i).(j) <- a1.(i).(j) ;
           if j <> k - 1 then
-            m.(i).(k + j) <- a2.(i).(j) ;
+            final.(i).(k + j) <- a2.(i).(j) ;
           if i <> k - 1 then
-            m.(k + i).(j) <- a3.(i).(j) ;
+            final.(k + i).(j) <- a3.(i).(j) ;
           if i <> k - 1 && j <> k - 1 then
-            m.(k + i).(k + j) <- a4.(i).(j)
+            final.(k + i).(k + j) <- a4.(i).(j)
         done
       done ;
       final
 ;;
 
 let rec prodst_2 m1 m2 = match Array.length m1 with
-  | 0 -> [||]
-  | 1 -> [|m1.(0).(0) * m2.(0).(0)|]
+  | 0 -> [|[||]|]
+  | 1 -> [|[|m1.(0).(0) * m2.(0).(0)|]|]
   | n when n mod 2 = 0 ->
     let a1, a2, a3, a4 = morceaux m1 in
       let b1, b2, b3, b4 = morceaux m2 in

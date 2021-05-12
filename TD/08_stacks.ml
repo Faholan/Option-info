@@ -173,12 +173,11 @@ let first_to_last st =
 (*a*)
 
 let destroy_stack_to_last st =
-  let rec aux = function
-    () -> let e = Stack.pop st in
-      if Stack.is_empty st then
-        e
-      else
-        aux ()
+  let rec aux _ = let e = Stack.pop st in
+    if Stack.is_empty st then
+      e
+    else
+      aux ()
   in aux ()
 ;;
 

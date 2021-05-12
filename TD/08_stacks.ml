@@ -194,16 +194,16 @@ let stack_to_last st =
 (*Exercice 7*)
 let split_stack st =
   let st1 = Stack.create () and st2 = Stack.create () in
-    let rec aux val =
+    let rec aux value =
       if Stack.is_empty st then
         st1, st2
       else (
-        if val then
+        if value then
           Stack.push (Stack.pop st) st1
         else
           Stack.push (Stack.pop st) st2
         ;
-        aux (not val)
+        aux (not value)
       )
     in aux true
 ;;

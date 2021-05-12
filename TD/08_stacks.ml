@@ -158,23 +158,14 @@ let premiere_occurrence x st =
 
 let first_to_last st =
   let x = Stack.pop st in
-    let rec aux = function
-      () -> if Stack.is_empty st then
-        []
-      else
-        let e = Stack.pop st in
-          e::(aux ())
-    in
-      let l = List.rev (aux ()) in (
-        Stack.push x st ;
-        let rec auxaux = function
-          | [] -> ()
-          | h::t -> (
-            Stack.push h st ;
-            auxaux t
-          )
-        in auxaux l
+    let rec aux _ = if Stack.is_empty st then
+      Stack.push x st
+    else
+      let y = Stack.pop st in (
+        aux () ;
+        Stack.push y st
       )
+    in aux ()
 ;;
 
 (*Exercice 6*)

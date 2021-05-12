@@ -38,7 +38,7 @@ let echange t1 t2 =
 
 (*a*)
 
-let list_to_stack =
+let list_to_stack l =
   let st = Stack.create () in
     let rec aux = function
       | [] -> st
@@ -46,7 +46,7 @@ let list_to_stack =
         Stack.push h st ;
         aux t
       )
-    in aux
+    in aux (List.rev l)
 ;;
 
 (*b*)

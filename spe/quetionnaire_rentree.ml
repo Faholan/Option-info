@@ -20,13 +20,19 @@ let rec pgcd a b =
 ;;
 
 (*b*)
-let minimum = function
+let rec minimum = function
   | [] -> failwith "Empty list"
-  | h::t -> let rec compare_min cur l = match l with
-    | [] -> cur
-    | h::t when h < cur -> compare_min h t
-    | h::t -> compare_min cur t
-  in compare_min h t
+  | [t] -> t
+  | h::t -> min h (minimum t)
+;;
+
+let minimum_iter l =
+  let lref = ref (List.tl l) and cur_min = ref (List.hd l) in
+    while !lref <> [] do
+      cur_min := min !cur_min (List.hd !lref) ;
+      lref := List.tl !lref
+    done ;
+    !cur_min
 ;;
 
 (*c*)
@@ -99,12 +105,9 @@ let rec filter f = function
 ;;
 
 (*Question 6*)
-let fold_left f a = function
+let rec fold_left f a = function
   | [] -> a
-  | h::t -> let rec rest_list cur = function
-    | [] -> cur
-    | h::t -> rest_list (f cur h) t
-  in rest_list (f a h) t
+  | h::t -> fold_left f (f a h) t
 ;;
 
 (*Partie II*)
@@ -119,7 +122,7 @@ let somme = fold_left (fun cur e -> cur + e) 0 ;;
 let flatten = fold_left concat [] ;;
 
 (*Question 10*)
-let max_list = fold_left max 0 ;;
+let max_list l = fold_left max (List.hd l) (List.tl l) ;;
 
 (*Question 11*)
 let len = fold_left (fun cur _ -> cur + 1) 0 ;;
@@ -188,9 +191,10 @@ let replace tuile liste =
         | Noeud(l) -> let rec replacer = function
           (*Liste_noeud, liste_externe*)
           | []-> []
-          | Trou::t -> let h = List.hd !lref in
+          | Trou::t -> let h = List.hd !lref in (
             lref := List.tl !lref ;
             h::(replacer t)
+          )
           | Noeud(l2)::t -> let h = Noeud(replacer l2) in
             h::(replacer t)
         in Noeud(replacer l)
@@ -290,4 +294,35 @@ let push n arr =
   ) ;
   arr.data.(arr.size) <- n ;
   arr.size <- arr.size + 1
+;;
+
+(*Séance 1*)
+type 'a arbre =
+  | Vide
+  | Noeud of 'a arbre * 'a * 'a arbre
+;;
+
+let rec parcours_infixe = function
+  | Vide -> []
+  | Noeud(left, name, right) -> concat (parcours_infixe left) (name::(parcours_infixe right))
+;;
+
+let parcours_infixe2 =
+  let rec concat_right current = function
+    | Vide -> current
+    | Noeud(left, value, right) -> concat_right (value::(concat_right current right)) left
+  in concat_right []
+;;
+
+let parcours_infixe3 arbre =
+  let res = ref [] in
+    let rec concat_right = function
+      | Vide -> ()
+      | Noeud(left, value, right) -> (
+          concat_right right ;
+          res := value::!res ;
+          concat_right left
+        )
+    in concat_right arbre;
+    !res
 ;;

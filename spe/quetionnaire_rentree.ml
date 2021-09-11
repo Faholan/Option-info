@@ -104,6 +104,14 @@ let rec filter f = function
   | _::t -> filter f t
 ;;
 
+let filter2 f =
+  let rec filter_rec beginning = function
+  | [] -> beginning
+  | h::t when f h -> filter_rec (h::beginning) t
+  | _::t -> filter_rec beginning t
+  in filter_rec []
+;;
+
 (*Question 6*)
 let rec fold_left f a = function
   | [] -> a

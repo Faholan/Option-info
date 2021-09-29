@@ -185,3 +185,128 @@ C(3n) = 3 * C(n) + O(1) car la complexité d'arbre_mediane est constante
 On a donc :
 C(n) = O(n)
 *)
+
+(*C.2*)
+(*
+On va montrer le résultat par récurence :
+Pour k = 1, c'est vrai (au moins 2 éléments sont majorés par la valeur exacte)
+
+Supposons que ce soit vrai au rang k. On considère le rang k+1
+
+Lors de l'algorithme, on divise le tableau en trois partie.
+Par hypothèse de récurrence, chacune de ces pseudo-médianes majore au moins 2^k éléments.
+La nouvelle pseudo-médiane majore 2 de ces pseudo-médianes, et donc au moins 2^(k+1) éléments.
+
+D'où le résultat.
+
+*)
+
+(*C.3*)
+(*
+On construit un tel tableau récursivement :
+On considère 3^k éléments distincts, et on place les 3^(k-1) premiers dans le premier tableau, etc.
+
+On montre le résultat par récurrence :
+Vrai pour k=1
+
+Si c'est vrai au rang k.
+On construit un tableau contenant 3^(k+1) éléments de la manière décrite.
+Par HR, chaque pseudo-médiane majore exactement 2^k éléments.
+Par construction, les deux premières pseudo-médianes ne majorent aucun élément du dernier tiers.
+Donc la nouvelle seudo-médiane majore exactement 2^(k+1) éléments du tableau.
+*)
+
+(*C.4*)
+(*
+
+On a démontré qu'au moins 2^k éléments sont inférieurs à la valeur.
+De même, au moins 2^k éléments lui sont supérieurs.
+
+Or : 2^k = exp(k * ln(2)) = exp(ln(3) * k * ln(2) / ln(3))
+= (3^k)^α
+= n^α
+
+Donc l'algorithme peut calculer une α-pseudo médiane.
+*)
+
+(*C.5*)
+(*
+Si la taille du tableau n'est pas une puissance de 3
+Alors, à chaque étape de la récursion, si la taille du tableau n'est pas un multiple de 3,
+alors on groupe les éléments normalement, sauf que le dernier groupe est composé d'1 ou 2 éléments au lieu de 3.
+*)
+
+(*Question D*)
+(*D.1*)
+(*
+Si l'on utilise des blocs de 5, alors on peut utiliser un arbre quintuple.
+
+L'équation de complexité devient alors :
+
+C(5n) = 5 * C(n) + O(1).
+La complexité reste linéaire.
+Cependant, la constante de calcul de médiane de 5 éléments est plus grande.
+
+D'après le même raisonnement, 3^k des 5^k éléments du tableau sont majorés par la pseudo-médiane
+(vrai pour k=1, la récursion se déroule comme pour 3.)
+
+On a donc une β-pseudo médiane, β = ln(3)/ln(5)
+*)
+
+(*D.2*)
+(*
+D'après le même raisonnement, pour tout e impair différent de 1, un algorithme avec des blocs de taille e est linéaire.
+De plus, d'après le même raisonnement, l'algorithme permet d'obtenir une ξ(e) = ln((e+1)/2)/ln(e) - médiane.
+
+Or, lim(ξ(2k+1)) (k -> +∞) = 1
+
+Donc pour tout ε > 0, il existe k > 1, ξ(2k+1) > (1-ε)
+
+Ainsi, pour tout ε, il existe un algorithme s'exécutant en cout linéaire permettant de calculer une (1-ε)pseudo-médiane.
+*)
+
+(*Partie IV*)
+(*Question A*)
+
+(*
+En utilisant une 1/2-pseudo médiane comme pivot, on divise le tableau en (dans le pire des cas) une zone contenant sqrt(n) éléments et 1 - sqrt(n) éléments.
+Sachant que le calcul de la 1/2-pseudo médiane et la séparation en deux parties linéaire, on a une équation de la forme :
+
+C(n) <= C(sqrt(n)) + C(n - sqrt(n)) + Kn
+
+Comme sqrt(n) = o(n), on peut trouver K' tel que K'n majore Kn + C(sqrt(n)).
+
+C vérifie une équation de la forme :
+
+C(n) <= C(n - sqrt(n)) + Kn.
+*)
+
+(*Question B*)
+(*
+TODO
+On pose α0 = n, α(k+1) = αk - sqrt(αk)
+Qui est strictement décroissante.
+
+On cherche k tq α0 - αk >= n/2
+
+On pose βk = α0 - αk
+β(k+1) = α0 - α(k+1) = α0 - αk + αk - α(k+1)
+
+= βk + sqrt(αk)
+
+Avec : αk = α0 - βk
+TODO
+*)
+
+(*Question C*)
+(*
+On pose uk = C(2^k)
+
+On a alors :
+uk = u(k-1) + O((2^k)^(3/2))
+
+D'où : uk = Somme(i=1 -> k)O((2^k)^(3/2))
+Soit uk = O((2^k)^(3/2))
+
+Donc C(n) = O(n^(3/2))
+*)

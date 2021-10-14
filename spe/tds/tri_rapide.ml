@@ -51,13 +51,13 @@ let separation tab i1 i2 =
 
 let tri_rapide tab =
   let rec tri_recursif i1 i2 =
-    if i1 = i2 then
+    if i1 >= i2 || i1 < 0 then
       ()
     else
       let pivot = separation tab i1 i2 in
-        tri_recursif i1 pivot ;
-        tri_recursif pivot i2
-  in tri_recursif 0 (Array.length tab)
+        tri_recursif i1 (pivot - 1) ;
+        tri_recursif (pivot + 1) i2
+  in tri_recursif 0 (Array.length tab - 1)
 ;;
 
 (*Partie II*)

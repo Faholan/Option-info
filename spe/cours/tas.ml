@@ -54,7 +54,7 @@ type 'a ap =
 let creer_ap n x =
     {
         libre = 0 ;
-        tab = array.make n x
+        tab = Array.make n x
     }
 ;;
 
@@ -100,7 +100,7 @@ let echange tas i j =
         tas.tab.(j) <- elem
 ;;
 
-let extrait_racine tas =
+let rec extrait_racine tas =
     if tas.libre = 0 then
         failwith "Le tas est vide"
     else (

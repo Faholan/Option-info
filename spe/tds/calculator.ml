@@ -244,10 +244,10 @@ let factorielle n =
           Var("n"),
           App(
             Var("fact"),
-            Minus(Var("n"), Int(1)),
-          ),
-        ),
-      ),
+            Minus(Var("n"), Int(1))
+          )
+        )
+      )
     ),
     App(Var("fact"), Int(n))
   ))

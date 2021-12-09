@@ -1,4 +1,7 @@
-(*Graphes*)
+(*Graphes
+
+Copyright (C) 2021  Faholan <https://github.com/Faholan>
+*)
 
 (*
 En général, on utilise les graphes pour représenter des relations entre des éléments, en particulier des réseaux.
@@ -64,3 +67,94 @@ Définiton :
 On dit que G = (V, E, P) est un graphe non orienté pondéré lorsque :
 (V, E) est un graphe non orienté, et P est une application de E dans R
 *)
+
+(*On considère le tableau des listes d'adjacence*)
+let ordre = Array.length ;;
+
+let liste_voisins g noeud = g.(noeud) ;;
+
+let pile_vide () = ref [] ;;
+
+let est_pile_vide p = !p = [] ;;
+
+let depile p =
+  let e = List.hd !p in
+    p := List.tl !p ;
+    e
+;;
+
+let empile p e =
+  p := e::!p
+;;
+
+let empile_liste p =
+  let rec empilator = function
+    | [] -> ()
+    | h::t -> empile p h; empilator t
+  in empilator
+;;
+
+
+type 'a file = {mutable l1: 'a list; mutable l2: 'a list} ;;
+
+let file_vide () = {l1=[]; l2=[]} ;;
+
+let est_file_vide f = f.l1 = [] && f.l2 = [] ;;
+
+let enfile f e = f.l1 <- e::f.l1 ;;
+
+let enfile_liste f =
+  let rec enfilator = function
+    | [] -> ()
+    | h::t -> enfile f h; enfilator t
+  in enfilator
+;;
+
+let rec defile f = match f.l1, f.l2 with
+  | [], [] -> failwith "defile: File vide"
+  | _, [] -> f.l2 <- List.rev f.l1 ;
+    f.l1 <- [];
+    defile f
+  | _, h::t -> f.l2 <- t;
+    h
+;;
+
+
+let parcours_prof g i =
+  let a_traiter = pile_vide () and vus = Array.make (ordre g) false in
+    let rec traiter_prochain_noeud () =
+      if est_pile_vide a_traiter then []
+      else (
+        let noeud = depile a_traiter in
+          if not vus.(noeud) then (
+            vus.(noeud) <- true ;
+            empile_liste a_traiter (liste_voisins g noeud) ;
+            noeud::(traiter_prochain_noeud ())
+          )
+          else
+            traiter_prochain_noeud ()
+      )
+    in
+      empile a_traiter i ;
+      traiter_prochain_noeud ()
+;;
+
+
+let parcours_prof g i =
+  let a_traiter = file_vide () and vus = Array.make (ordre g) false in
+    let rec traiter_prochain_noeud () =
+      if est_file_vide a_traiter then []
+      else (
+        let noeud = defile a_traiter in
+          if not vus.(noeud) then (
+            vus.(noeud) <- true ;
+            enfile_liste a_traiter (liste_voisins g noeud) ;
+            noeud::(traiter_prochain_noeud ())
+          )
+          else
+            traiter_prochain_noeud ()
+      )
+    in
+      enfile a_traiter i ;
+      traiter_prochain_noeud ()
+;;

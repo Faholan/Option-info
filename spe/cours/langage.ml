@@ -51,7 +51,7 @@ On définit ω^n = ε si n = 0, ω.ω^(n-1) si n >= 1
 
 On identifie tout caractère au mot de longueur 1 composé par ce caractère.
 
-Définition : Langages régulires (rationnels)
+Définition : Langages réguliers (rationnels)
 
 Définissons les langages rationnels par induction structurelle par induction :
 
@@ -158,4 +158,99 @@ Pour déterminer un automate, on simule toutes les transitions de l'automate ini
 après chaque transition, dans quels états l'automate de départ aurait pu se trouver
 
 Rem : on n'obtiendra pas plus de 2 ** |Q| états après déterminisation de l'automate.
+
+Minimisation d'un automate fini déterministe
+--------------------------------------------
+
+Minimiser un automate c'est déterminer un automate fini reconnaissant le même
+langage mais avec un nombre minimal d'états.
+
+Pour cela on essaie de fusionner des états se comportant de la même façon.
+
+On ne peut pas regrouper un état non final avec un état final.
+
+Algorithme: on essaie de fusionner par groupes, en vérifiant que en regroupant on a les mêmes changements de groupes
+
+Propriété : L'automate minimal est unique à réétiquetage près à condition de ne considérer que des automates complets
+
+Opérations rationnelles / régulières sur les langages reconnus par un algorithme
+
+Union :
+On ajoute un état initial et des liaisons menant à chacun des successeurs de chaque état initial des deux automates
+
+On en déduit que tout langage fini est reconnaissable par un automate fini en tant qu'union finie de concaténation finie finie de langages singletons
+
+L'ensemble des langages reconnaissables par automate fini est stable par union, concaténation et mise à l'étoile.
+
+Propriété : tout langage reconnu par un automate fini est un langage régulier.
+*)
+
+(*Questions langages
+
+L1 = {a^nb^n | n € N} n'est pas un langage régulier
+L2 = {a^nba^n | n € N} n'est pas régulier
+L3 = {a^na^n | n € N} est régulier
+L4 = {a^mb^p | m < p} n'est pas régulier
+L5 = {a^pb^q | p + q <= 2048} est régulier
+L6 = {a^p | p € P} n'est pas régulier
+L7 = {a^(n**2) | n € N} n'est pas régulier
+L8 = {ω | w palyndrome}
+L9 = {ωω^R | ω € L} où L est rationnel, ω^R le miror de ω
+
+Si L1 était rationnel, alors il existerait un automate fini déterministe complet reconnaissant L1.
+
+Soit n son nombre d'états.
+
+Soit ω = a^nb^n € L1, donc il existe un chemin dans l'automate allant de i à f € F étiqueté par ω.
+
+Il y a besoin de n + 1 états pour reconnaître les a, donc il existe un cycle.
+On peut donc le supprimer, et obtenir un mot en dohors du langage reconnu par l'automate.
+
+L9 n'est pas rationnel à priori car on ne sait pas renverser exactement.
+Pour L vide ou L = {a^n}, L9 est rationnel
+Mais si on prend {a^nb}, c'est pas rationnel (même démo, cycle)
+
+Par contre, L10 est bien rationnel (on renverse un automate)
+
+-----
+Soit L un langage régulier. Les langages suivants sont-ils réguliers ?
+
+sqrt(L) = {ω | ω.ω € L}
+
+L / 2 = {ω1 | ∃ω2 € ∑*, |ω1| = |ω2|, ω1.ω2 € L}
+*)
+
+(*Les expressions régulières / rationnelles
+
+Définition : L'ensemble des expressions régulières sur ∑ est défini par induction structurelle :
+
+- ∅ est une expression régulière sur ∑
+- ε est une expression régulière sur ∑
+- a est une expression régulière sur ∑ ∀ a € ∑
+- (E) est une expression régulière sur ∑ pour E expression régulière sur ∑
+- (E1|E2)
+- (E1.E2)
+- (E)^n
+- (E)*
+
+Définition : Sémantique des expressions régulières
+
+On définit le langage décrit par une expression régulière de façon inductive :
+
+L(∅) = ∅
+L(ε) = {ε}
+∀ a € ∑, L(a) = {a}
+L((E)) = L(E)
+L((E1|E2)) = L(E1) ∪ L(E2)
+L((E1.E2)) = L(E1).L(E2)
+L((E)^n) = (L(E))^n
+L((E*​)) = (L(E))*
+
+Tous les langages réguliers sont descriptibles par expression régulière de par la construction
+Rq : la réciproque est vraie
+
+flex et yacc pour interpréter
+
+Bon bouquin :
+Compilateurs (Aho, Sethi, Ulman, Laam) alias: Dragon book
 *)

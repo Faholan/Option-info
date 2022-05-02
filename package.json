@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@opam/ocaml-lsp-server": "1.10.3",
+    "@opam/ocaml-lsp-server": "1.10.5",
     "@opam/ocp-indent": "1.7.0",
     "ocaml": "4.13.x"
   }
